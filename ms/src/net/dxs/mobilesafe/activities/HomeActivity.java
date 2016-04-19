@@ -34,12 +34,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 	private static final String TAG = "HomeActivity";
 
-	private static final String[] names = { "手机防盗", "通讯卫士", "软件管理", "进程管理",
-			"流量统计", "手机杀毒", "缓存清理", "高级工具", "设置中心" };
-	private static final int[] icons = { R.drawable.safe,
-			R.drawable.callmsgsafe_selector, R.drawable.app,
-			R.drawable.taskmanager, R.drawable.netmanager, R.drawable.trojan,
-			R.drawable.sysoptimize, R.drawable.atools, R.drawable.settings };
+	private static final String[] names = { "手机防盗", "通讯卫士", "软件管理", "进程管理", "流量统计", "手机杀毒", "缓存清理", "高级工具", "设置中心" };
+	private static final int[] icons = { R.drawable.safe, R.drawable.callmsgsafe_selector, R.drawable.app, R.drawable.taskmanager, R.drawable.netmanager, R.drawable.trojan, R.drawable.sysoptimize, R.drawable.atools, R.drawable.settings };
 
 	private GridView mGr_functionEntry;
 
@@ -78,8 +74,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		switch (position) {
 		case 0:// 手机防盗
 			checkPwd();
@@ -115,7 +110,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	 * 检测用户是否设置过密码
 	 */
 	private void checkPwd() {
-		String strPwd = SpUtil.getInstance().getString("password");
+		String strPwd = SpUtil.getInstance().getString(Constants.LOSTFIND_PSSWORD);
 		if (TextUtils.isEmpty(strPwd)) {
 			// 没有设置过密码
 			Log.i(TAG, "没有设置过密码,弹出设置密码对话框");
@@ -136,8 +131,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 		View view = View.inflate(this, R.layout.dialog_setup_pwd, null);
 		mEt_pwd = (EditText) view.findViewById(R.id.et_setup_password);
-		mEt_pwd_confirm = (EditText) view
-				.findViewById(R.id.et_setup_password_confirm);
+		mEt_pwd_confirm = (EditText) view.findViewById(R.id.et_setup_password_confirm);
 		mBtn_ok = (Button) view.findViewById(R.id.btn_setup_ok);
 		mBtn_cancle = (Button) view.findViewById(R.id.btn_setup_cancle);
 		mBtn_ok.setOnClickListener(new OnClickListener() {
@@ -145,10 +139,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			@Override
 			public void onClick(View v) {
 				String strPwd = mEt_pwd.getText().toString().trim();
-				String strPwdConfirm = mEt_pwd_confirm.getText().toString()
-						.trim();
-				if (TextUtils.isEmpty(strPwd)
-						|| TextUtils.isEmpty(strPwdConfirm)) {
+				String strPwdConfirm = mEt_pwd_confirm.getText().toString().trim();
+				if (TextUtils.isEmpty(strPwd) || TextUtils.isEmpty(strPwdConfirm)) {
 					AppToast.getInstance().show("对不起,密码输入不能为空!");
 					return;
 				}
@@ -156,8 +148,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 					AppToast.getInstance().show("两次密码输入不一致");
 					return;
 				}
-				SpUtil.getInstance().saveString(Constants.LOSTFIND_PSSWORD,
-						Md5Utils.encode(strPwd));
+				SpUtil.getInstance().saveString(Constants.LOSTFIND_PSSWORD, Md5Utils.encode(strPwd));
 				mAlertDialog.dismiss();
 			}
 		});
@@ -196,13 +187,11 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 					return;
 				}
 				// 得到本地保存的密码加密后的密文
-				String strLocalPWD = SpUtil.getInstance().getString(
-						Constants.LOSTFIND_PSSWORD);
+				String strLocalPWD = SpUtil.getInstance().getString(Constants.LOSTFIND_PSSWORD);
 				if (Md5Utils.encode(strPwd).equals(strLocalPWD)) {
 					// 密码正确进入手机防盗界面
 					mAlertDialog.dismiss();
-					Intent intent = new Intent(HomeActivity.this,
-							LostFindActivity.class);
+					Intent intent = new Intent(HomeActivity.this, LostFindActivity.class);
 					startActivity(intent);
 				} else {
 					AppToast.getInstance().show("密码错误!");
