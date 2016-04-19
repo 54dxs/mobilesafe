@@ -109,4 +109,8 @@ public interface Constants {
 	/** JS 回调映射名 **/
 	String PPL_WEBVIEW_JS_CALLBACK = "PPLWebViewJSCallback";
 
+	/********************************** 密码锁 ***************************************************************************************************/
+	/** 进入手机防盗的密钥 **/
+	String LOSTFIND_PSSWORD = "LostFind_Pssword";
+
 }
