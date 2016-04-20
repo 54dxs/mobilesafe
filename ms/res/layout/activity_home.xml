@@ -13,6 +13,14 @@
         android:textColor="#000000"
         android:textSize="20sp" />
 
+    <net.dxs.mobilesafe.ui.view.FocusedTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="我是手机小护卫,我时刻保护您的手机安全,o(∩_∩)o 哈哈,(*^__^*) 嘻嘻" />
+
     <GridView
         android:id="@+id/gv_home_functionentry"
         android:layout_width="match_parent"
