@@ -112,5 +112,11 @@ public interface Constants {
 	/********************************** 密码锁 ***************************************************************************************************/
 	/** 进入手机防盗的密钥 **/
 	String LOSTFIND_PSSWORD = "LostFind_Pssword";
+	/** 手机防盗-是否已完成设置向导 **/
+	String LOSTFIND_FINISHSETUP = "LostFind_finishSetup";
+	/** 手机防盗-安全号码 **/
+	String LOSTFIND_SAFENUMBER = "LostFind_safeNumber";
+	/** 手机防盗-防盗保护是否已开启标记 **/
+	String LOSTFIND_PROTECTINGSTATUS = "LostFind_protectingStatus";
 
 }

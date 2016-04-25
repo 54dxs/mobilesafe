@@ -38,7 +38,7 @@ public class AppToast extends Toast {
 		// 第二个参数：相对于第一个参数设置toast位置的横向X轴的偏移量，正数向右偏移，负数向左偏移
 		// 第三个参数：同的第二个参数道理一样
 		// 如果你设置的偏移量超过了屏幕的范围，toast将在屏幕内靠近超出的那个边界显示
-		this.setGravity(Gravity.TOP | Gravity.CENTER, 0, 50);
+		this.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 50);
 		// 屏幕居中显示，X轴和Y轴偏移量都是0
 		// this.setGravity(Gravity.CENTER, 0, 0);
 	}
