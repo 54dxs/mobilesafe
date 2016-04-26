@@ -2,7 +2,8 @@ package net.dxs.mobilesafe.activities;
 
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
-import net.dxs.mobilesafe.receiver.MyAdmin;
+import net.dxs.mobilesafe.activities.setup.Setup1Activity;
+import net.dxs.mobilesafe.receiver.MyDeviceAdminReceiver;
 import net.dxs.mobilesafe.utils.L;
 import net.dxs.mobilesafe.utils.SpUtil;
 import net.dxs.mobilesafe.utils.AppUtil.AppToast;
@@ -46,15 +47,13 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		// 判断用户是否进行过设置向导
 		boolean finishSetup = SpUtil.getInstance().getBoolean(
-				Constants.LOSTFIND_FINISHSETUP, true);
+				Constants.LOSTFIND_FINISHSETUP, false);
 		if (finishSetup) {// 如果配置过，就显示正常的ui界面
 			// 已经完成过设置向导,加载正常的ui界面
 			init();
 		} else {
 			// 定向页面到设置向导页面
-			// Intent intent = new Intent(this, Setup1Activity.class);
-			// startActivity(intent);
-			// this.finish();
+			reentrySetup();
 		}
 	}
 
@@ -81,7 +80,8 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 		// 获得设备管理器
 		mDpm = (DevicePolicyManager) this
 				.getSystemService(Context.DEVICE_POLICY_SERVICE);
-		mComponent_deviceAdmin = new ComponentName(this, MyAdmin.class);
+		mComponent_deviceAdmin = new ComponentName(this,
+				MyDeviceAdminReceiver.class);
 	}
 
 	/**
@@ -99,10 +99,10 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.btn_lostfind_active:
+		case R.id.btn_lostfind_active:// 激活短信指令功能
 			setAdminActive();
 			break;
-		case R.id.tv_lostfind_reentrySetup:
+		case R.id.tv_lostfind_reentrySetup:// 重新进入设置向导
 			reentrySetup();
 			break;
 		}
@@ -113,9 +113,9 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void reentrySetup() {
 		// 定向页面到设置向导页面
-		// Intent intent = new Intent(this, Setup1Activity.class);
-		// startActivity(intent);
-		// this.finish();
+		Intent intent = new Intent(this, Setup1Activity.class);
+		startActivity(intent);
+		this.finish();
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void setAdminActive() {
 		boolean isAdminActive = mDpm.isAdminActive(mComponent_deviceAdmin);
-		L.i(TAG, "isAdminActive--->" + isAdminActive);
+		L.i(TAG, "setAdminActive-isAdminActive--->" + isAdminActive);
 		if (isAdminActive) {
 			cancel_deviceAdmin();
 		} else {
@@ -151,8 +151,11 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 	private void cancel_deviceAdmin() {
 		// 移除激活的组件
 		mDpm.removeActiveAdmin(mComponent_deviceAdmin);
+		// 移除组件需要一定时间，这个时候调用了setDeviceAdminStatus()不合理
+		// setDeviceAdminStatus();
+		mBtn_active.setText("激活短信指令功能");
+		mBtn_active.setTextColor(Color.RED);
 		AppToast.getInstance().show("哦买噶,短信指令被你取消了");
-		setDeviceAdminStatus();
 	}
 
 	@Override
@@ -166,13 +169,13 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void setDeviceAdminStatus() {
 		boolean isAdminActive = mDpm.isAdminActive(mComponent_deviceAdmin);
-		L.i(TAG, "isAdminActive--->" + isAdminActive);
+		L.i(TAG, "setDeviceAdminStatus-isAdminActive--->" + isAdminActive);
 		if (isAdminActive) {
-			mBtn_active.setText("激活短信指令功能");
-			mBtn_active.setTextColor(Color.RED);
-		} else {
 			mBtn_active.setText("取消短信指令功能");
 			mBtn_active.setTextColor(Color.BLACK);
+		} else {
+			mBtn_active.setText("激活短信指令功能");
+			mBtn_active.setTextColor(Color.RED);
 		}
 	}
 }

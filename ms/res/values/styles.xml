@@ -1,20 +1,9 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
+    <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowNoTitle">true</item>
     </style>
 
@@ -24,6 +13,49 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">19sp</item>
+    </style>
+
+    <!-- 标题文本的样式 -->
+    <style name="text_title_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:background">#8866ff00</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="image_online_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@android:drawable/presence_online</item>
+    </style>
+
+    <style name="image_offline_style" parent="@style/image_online_style">
+        <item name="android:src">@android:drawable/presence_invisible</item>
+    </style>
+
+    <style name="button_next_style">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:paddingTop">3dip</item>
+        <item name="android:paddingBottom">3dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/selector_btn_green</item>
+        <item name="android:onClick">next</item>
+        <item name="android:drawableRight">@drawable/next</item>
+        <item name="android:text">下一步</item>
+    </style>
+
+    <style name="button_pre_style" parent="@style/button_next_style">
+        <item name="android:text">上一步</item>
+        <item name="android:onClick">pre</item>
+        <item name="android:layout_alignParentRight">false</item>
+        <item name="android:drawableRight">@null</item>
+        <item name="android:drawableLeft">@drawable/previous</item>
     </style>
 
 </resources>

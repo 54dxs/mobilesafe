@@ -8,6 +8,27 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
+    <!-- 网络相关权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 普通（WiFi，网络，基站）定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 允许应用创建用于测试的模拟定位提供者 -->
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <!-- 读取SD卡数据 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 写数据到SD卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 读取电话状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 接收开机完成广播 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 读取联系人数据 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name="net.dxs.mobilesafe.app.App"
         android:allowBackup="true"
@@ -25,10 +46,16 @@
         </activity>
         <activity android:name="net.dxs.mobilesafe.activities.HomeActivity" />
         <activity android:name="net.dxs.mobilesafe.activities.LostFindActivity" />
+        <!-- 设置向导 -->
+        <activity android:name="net.dxs.mobilesafe.activities.setup.Setup1Activity" />
+        <activity android:name="net.dxs.mobilesafe.activities.setup.Setup2Activity" />
+        <activity android:name="net.dxs.mobilesafe.activities.setup.Setup3Activity" />
+        <activity android:name="net.dxs.mobilesafe.activities.setup.Setup4Activity" />
+        <activity android:name="net.dxs.mobilesafe.activities.SelectContactActivity" />
 
         <!-- 一键锁屏，远程擦除数据 -->
         <receiver
-            android:name="net.dxs.mobilesafe.receiver.MyAdmin"
+            android:name="net.dxs.mobilesafe.receiver.MyDeviceAdminReceiver"
             android:description="@string/sample_device_admin_description"
             android:label="@string/sample_device_admin"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >

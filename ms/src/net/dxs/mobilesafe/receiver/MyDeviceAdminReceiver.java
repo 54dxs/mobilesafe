@@ -8,6 +8,6 @@ import android.app.admin.DeviceAdminReceiver;
  * @author lijian-pc
  * @date 2016-4-25 下午2:47:43
  */
-public class MyAdmin extends DeviceAdminReceiver {
+public class MyDeviceAdminReceiver extends DeviceAdminReceiver {
 
 }
