@@ -2,6 +2,7 @@ package net.dxs.mobilesafe.activities.setup;
 
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
+import net.dxs.mobilesafe.utils.L;
 import net.dxs.mobilesafe.utils.SpUtil;
 import net.dxs.mobilesafe.utils.AppUtil.AppToast;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
  * @date 2016-4-26 上午11:40:56
  */
 public class Setup2Activity extends BaseSetupActivity {
+
+	private static final String TAG = "Setup2Activity";
 
 	/** sim卡是否获取的状态图标 */
 	private ImageView mIv_status;
@@ -51,7 +54,7 @@ public class Setup2Activity extends BaseSetupActivity {
 	 */
 	private void checkSIM() {
 		String savedSim = SpUtil.getInstance().getString(
-				Constants.LOSTFIND_SETUP2_SIM, "");
+				Constants.LOSTFIND_SIM, "");
 		if (!TextUtils.isEmpty(savedSim)) {
 			mIv_status.setImageResource(R.drawable.lock);
 		}
@@ -60,7 +63,7 @@ public class Setup2Activity extends BaseSetupActivity {
 	public void next(View v) {
 		// 判断是否绑定了sim卡，如果没有绑定就提示用户绑定sim卡
 		String savedSim = SpUtil.getInstance().getString(
-				Constants.LOSTFIND_SETUP2_SIM, "");
+				Constants.LOSTFIND_SIM, "");
 		if (TextUtils.isEmpty(savedSim)) {
 			AppToast.getInstance().show("请先绑定sim卡");
 			return;
@@ -92,15 +95,16 @@ public class Setup2Activity extends BaseSetupActivity {
 	public void bindSim(View v) {
 		// 判断是否已经绑定了sim卡
 		String savedSim = SpUtil.getInstance().getString(
-				Constants.LOSTFIND_SETUP2_SIM, "");
+				Constants.LOSTFIND_SIM, "");
 		if (TextUtils.isEmpty(savedSim)) {
 			// TODO 注意这里要真机带SIM卡，否则会崩溃
 			String sim = mTelephonyManager.getSimSerialNumber();// 获取sim卡的唯一串号
-			SpUtil.getInstance().saveString(Constants.LOSTFIND_SETUP2_SIM, sim);
+			SpUtil.getInstance().saveString(Constants.LOSTFIND_SIM, sim);
 			mIv_status.setImageResource(R.drawable.lock);
+			L.i(TAG, "SIM:" + sim);
 		} else {// 原来绑定过sim卡
 			SpUtil.getInstance()
-					.saveString(Constants.LOSTFIND_SETUP2_SIM, null);
+					.saveString(Constants.LOSTFIND_SIM, null);
 			mIv_status.setImageResource(R.drawable.unlock);
 		}
 	}

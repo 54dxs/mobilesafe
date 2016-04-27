@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
             android:layout_marginTop="8dip"
             android:text="15010990415"
             android:textSize="18sp" />
@@ -85,12 +85,6 @@
         android:clickable="true"
         android:text="重新进入设置向导"
         android:textSize="18sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:layout_marginTop="3dip"
-        android:background="@drawable/list_devider" />
 
     <TextView
         style="@style/text_content_style"

@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
 
     <!-- 网络相关权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -28,6 +28,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- 读取联系人数据 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 监听开机广播权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 发送短信权限 -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:name="net.dxs.mobilesafe.app.App"
@@ -44,7 +48,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- 主界面 -->
         <activity android:name="net.dxs.mobilesafe.activities.HomeActivity" />
+        <!-- 手机防盗 -->
         <activity android:name="net.dxs.mobilesafe.activities.LostFindActivity" />
         <!-- 设置向导 -->
         <activity android:name="net.dxs.mobilesafe.activities.setup.Setup1Activity" />
@@ -65,6 +71,17 @@
 
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+        <!-- 注册手机启动完毕的广播接收者,记得添加权限 -->
+        <receiver
+            android:name="net.dxs.mobilesafe.receiver.BootCompleteReceiver"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
     </application>

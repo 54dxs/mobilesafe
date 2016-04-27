@@ -18,7 +18,25 @@ public interface Constants {
 
 	/********************************** 通知 ***************************************************************************************************/
 
+	/********************************** 短信指令 ***************************************************************************************************/
+	/** 短信指令-位置追踪 **/
+	String SMS_ACTION_LOCATION = "#*location*#";
+	/** 短信指令-播放报警音乐 **/
+	String SMS_ACTION_ALARM = "#*alarm*#";
+	/** 短信指令-清除数据 **/
+	String SMS_ACTION_WIPEDATA = "#*wipedata*#";
+	/** 短信指令-锁屏 **/
+	String SMS_ACTION_LOCKSCREEN = "#*lockscreen*#";
+
+	/********************************** intent数据 ***************************************************************************************************/
+	/** 手机防盗-设置向导3-联系人信息-号码 **/
+	String INTENT_DATA_CONTACTINFO_PHONE = "Intent_data_contactInfo_phone";
+
 	/********************************** intent动作 ***************************************************************************************************/
+
+	/********************************** ActivityResult ***************************************************************************************************/
+	/** 选择联系人-返回结果码 **/
+	int ACTIVITYRESULT_CODE_SELECTCONTACTACTIVITY = 1000;
 
 	/********************************** 外设 ***************************************************************************************************/
 	/** 连接设备 **/
@@ -29,25 +47,15 @@ public interface Constants {
 	/** JS 回调映射名 **/
 	String PPL_WEBVIEW_JS_CALLBACK = "PPLWebViewJSCallback";
 
-	/********************************** 密码锁 ***************************************************************************************************/
+	/********************************** 手机防盗 ***************************************************************************************************/
 	/** 进入手机防盗的密钥 **/
-	String LOSTFIND_PSSWORD = "LostFind_Pssword";
+	String LOSTFIND_PSSWORD = "LostFind_pssword";
 	/** 手机防盗-是否已完成设置向导 **/
-	String LOSTFIND_FINISHSETUP = "LostFind_finishSetup";
+	String LOSTFIND_FINISH_SETUP = "LostFind_finish_setup";
 	/** 手机防盗-安全号码 **/
-	String LOSTFIND_SAFENUMBER = "LostFind_safeNumber";
+	String LOSTFIND_SAFE_NUMBER = "LostFind_safe_number";
 	/** 手机防盗-防盗保护是否已开启标记 **/
-	String LOSTFIND_PROTECTINGSTATUS = "LostFind_protectingStatus";
-
+	String LOSTFIND_PROTECTING_STATUS = "LostFind_protecting_status";
 	/** 手机防盗-设置向导2-sim **/
-	String LOSTFIND_SETUP2_SIM = "LostFind_setup2_sim";
-	/** 手机防盗-设置向导3-安全号码 **/
-	String LOSTFIND_SETUP3_SAFENUMBER = "LostFind_setup3_safenumber";
-
-	/** 手机防盗-设置向导3-联系人信息-号码 **/
-	String INTENT_SETUP3_CONTACTINFO_PHONE = "Intent_setup3_contactInfo_phone";
-
-	/** 选择联系人-返回结果码 **/
-	int ACTIVITYRESULT_RESULTCODE_SELECTCONTACTACTIVITY = 1000;
-
+	String LOSTFIND_SIM = "LostFind_SIM";
 }

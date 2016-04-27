@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 /**
  * 联系人信息提供者
@@ -30,7 +31,8 @@ public class ContactInfoProvider {
 	 * @return
 	 */
 	public static List<ContactInfo> getContactInfo(Context context) {
-		SystemClock.sleep(3000);
+		long in_time = SystemClock.uptimeMillis();
+
 		List<ContactInfo> infos = new ArrayList<ContactInfo>();
 		ContentResolver resolver = context.getContentResolver();
 		Uri rawcontactsuri = Uri
@@ -60,12 +62,22 @@ public class ContactInfoProvider {
 						info.setPhone(data1);
 					}
 				}
-				infos.add(info);
+				if (!TextUtils.isEmpty(info.getName())
+						&& !TextUtils.isEmpty(info.getPhone())) {
+					infos.add(info);
+					L.i(TAG, "--------------华丽丽的分割线--------------");
+				}
 				dataCursor.close();
-				L.i(TAG, "--------------华丽丽的分割线--------------");
 			}
 		}
 		cursor.close();
+
+		// 这里故意设置一个3s的加载时间
+		long timeInterval = SystemClock.uptimeMillis() - in_time;
+		if (timeInterval < 3000) {
+			SystemClock.sleep(3000 - timeInterval);
+		}
+
 		return infos;
 	}
 

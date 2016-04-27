@@ -96,8 +96,8 @@ public class SelectContactActivity extends BaseActivity implements
 			long id) {
 		String phone = mList_contactInfo.get(position).getPhone();
 		Intent data = new Intent();
-		data.putExtra(Constants.INTENT_SETUP3_CONTACTINFO_PHONE, phone);
-		setResult(Constants.ACTIVITYRESULT_RESULTCODE_SELECTCONTACTACTIVITY,
+		data.putExtra(Constants.INTENT_DATA_CONTACTINFO_PHONE, phone);
+		setResult(Constants.ACTIVITYRESULT_CODE_SELECTCONTACTACTIVITY,
 				data);// 设置一个结果数据
 		finish();// 关闭掉当前的activity，把数据返回给调用者activity
 	}

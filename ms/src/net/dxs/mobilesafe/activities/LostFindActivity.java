@@ -47,7 +47,7 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		// 判断用户是否进行过设置向导
 		boolean finishSetup = SpUtil.getInstance().getBoolean(
-				Constants.LOSTFIND_FINISHSETUP, false);
+				Constants.LOSTFIND_FINISH_SETUP, false);
 		if (finishSetup) {// 如果配置过，就显示正常的ui界面
 			// 已经完成过设置向导,加载正常的ui界面
 			init();
@@ -72,7 +72,7 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 
 	private void initData() {
 		mTv_number.setText(SpUtil.getInstance().getString(
-				Constants.LOSTFIND_SAFENUMBER, ""));
+				Constants.LOSTFIND_SAFE_NUMBER, ""));
 		mTv_reentrySetup.setOnClickListener(this);
 		mBtn_active.setOnClickListener(this);
 		lockStatus();
@@ -89,7 +89,7 @@ public class LostFindActivity extends BaseActivity implements OnClickListener {
 	 */
 	private void lockStatus() {
 		if (SpUtil.getInstance().getBoolean(
-				Constants.LOSTFIND_PROTECTINGSTATUS, false)) {
+				Constants.LOSTFIND_PROTECTING_STATUS, false)) {
 			mIv_status.setImageResource(R.drawable.lock);
 		} else {
 			mIv_status.setImageResource(R.drawable.unlock);
