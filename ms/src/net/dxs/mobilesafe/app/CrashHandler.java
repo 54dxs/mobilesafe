@@ -46,7 +46,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	private static final String CRASH_REPORTER_EXTENSION = ".dat";
 
 	/** SD卡错误报告文件路径 */
-	private static String SDCARD_PATH = "/sdcard/data/mobilesafe/";
+	private static String SDCARD_PATH = "/sdcard/data/mobilesafe/log";
 
 	/** 保证只有一个CrashHandler实例 */
 	private CrashHandler() {
@@ -54,7 +54,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	}
 
 	private void initAddress() {
-		SDCARD_PATH = Environment.getExternalStorageDirectory() + "/";// +"/data/mobilesafe/";
+		SDCARD_PATH = Environment.getExternalStorageDirectory() + "/";// +"/data/mobilesafe/log";
 		L.e(TAG, "SDCARD_PATH>>" + SDCARD_PATH);
 	}
 
