@@ -6,6 +6,7 @@ import java.util.List;
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.domain.FunctionEntry;
+import net.dxs.mobilesafe.observer.SmsObserver;
 import net.dxs.mobilesafe.ui.adapter.HomeAdapter;
 import net.dxs.mobilesafe.utils.L;
 import net.dxs.mobilesafe.utils.Md5Utils;
@@ -14,6 +15,8 @@ import net.dxs.mobilesafe.utils.AppUtil.AppToast;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -33,6 +36,8 @@ import android.widget.GridView;
 public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 	private static final String TAG = "HomeActivity";
+	/** 手机短信内容提供者的Uri */
+	private static final Uri uri_SMS = Uri.parse("content://sms");
 
 	private static final String[] names = { "手机防盗", "通讯卫士", "软件管理", "进程管理",
 			"流量统计", "手机杀毒", "缓存清理", "高级工具", "设置中心" };
@@ -75,6 +80,10 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 		mGr_functionEntry.setAdapter(new HomeAdapter(this, list));
 		mGr_functionEntry.setOnItemClickListener(this);
+
+		// 注册一个监听短信的ContentObserver
+		getContentResolver().registerContentObserver(uri_SMS, true,
+				new SmsObserver(this, mHandler));
 	}
 
 	@Override
@@ -86,6 +95,10 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			break;
 
 		case 1:// 通讯卫士
+			MediaPlayer player = MediaPlayer.create(this, R.raw.ylzs);
+			player.setLooping(false);
+			player.setVolume(1.0f, 1.0f);
+			player.start();
 			break;
 
 		case 2:// 软件管理

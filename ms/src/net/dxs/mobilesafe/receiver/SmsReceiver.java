@@ -17,7 +17,7 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
 /**
- * 短信广播接收者
+ * 短信广播接收者(此方式发现并不能收到广播，可能是手机上的其他程序中断了短信有序广播的传递)
  * 
  * @author lijian-pc
  * @date 2016-4-27 下午4:10:25
@@ -122,6 +122,7 @@ public class SmsReceiver extends BroadcastReceiver {
 					+ longitude + "-" + accuarcy, null, null);
 			mLm.removeUpdates(mListener_location);
 			mListener_location = null;
+			L.i(TAG, latitude + "-" + longitude + "-" + accuarcy);
 		}
 
 		// 当状态变化的时候调用的方法。可用--》不可以 不可以--》可用

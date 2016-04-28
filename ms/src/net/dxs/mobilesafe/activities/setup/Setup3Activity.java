@@ -50,10 +50,10 @@ public class Setup3Activity extends BaseSetupActivity {
 			AppToast.getInstance().show("请设置安全号码");
 			return;
 		}
-		if (!RegexUtils.isMobileNO(safenumber)) {
-			AppToast.getInstance().show("安全号码格式不正确");
-			return;
-		}
+//		if (!RegexUtils.isMobileNO(safenumber)) {
+//			AppToast.getInstance().show("安全号码格式不正确");
+//			return;
+//		}
 		SpUtil.getInstance().saveString(Constants.LOSTFIND_SAFE_NUMBER,
 				safenumber);
 		loadActivity(Setup4Activity.class);
