@@ -7,6 +7,7 @@ import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.domain.FunctionEntry;
 import net.dxs.mobilesafe.observer.SmsObserver;
+import net.dxs.mobilesafe.service.CallSmsSafeService;
 import net.dxs.mobilesafe.ui.adapter.HomeAdapter;
 import net.dxs.mobilesafe.utils.L;
 import net.dxs.mobilesafe.utils.Md5Utils;
@@ -83,6 +84,10 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		// 注册一个监听短信的ContentObserver
 		getContentResolver().registerContentObserver(uri_SMS, true,
 				new SmsObserver(this, mHandler));
+		
+		//启动黑名单服务
+		Intent callSmsSafeIntent = new Intent(this, CallSmsSafeService.class);
+		startService(callSmsSafeIntent);
 	}
 
 	@Override
