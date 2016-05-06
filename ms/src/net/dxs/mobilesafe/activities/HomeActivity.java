@@ -15,7 +15,6 @@ import net.dxs.mobilesafe.utils.AppUtil.AppToast;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,16 +88,15 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		Intent intent;
 		switch (position) {
 		case 0:// 手机防盗
 			checkPwd();
 			break;
 
 		case 1:// 通讯卫士
-			MediaPlayer player = MediaPlayer.create(this, R.raw.ylzs);
-			player.setLooping(false);
-			player.setVolume(1.0f, 1.0f);
-			player.start();
+			intent = new Intent(HomeActivity.this, CallSmsSafeActivity.class);
+			startActivity(intent);
 			break;
 
 		case 2:// 软件管理

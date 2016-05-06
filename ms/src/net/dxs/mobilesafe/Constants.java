@@ -58,4 +58,13 @@ public interface Constants {
 	String LOSTFIND_PROTECTING_STATUS = "LostFind_protecting_status";
 	/** 手机防盗-设置向导2-sim **/
 	String LOSTFIND_SIM = "LostFind_SIM";
+	
+	/********************************** 通讯卫士 ***************************************************************************************************/
+	/** 拦截模式-全部拦截 **/
+	String SAFE_MODE_ALL = "0";
+	/** 拦截模式-电话拦截 **/
+	String SAFE_MODE_PHONE = "1";
+	/** 拦截模式-短信拦截 **/
+	String SAFE_MODE_SMS = "2";
+	
 }

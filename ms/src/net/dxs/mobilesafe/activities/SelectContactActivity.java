@@ -49,7 +49,7 @@ public class SelectContactActivity extends BaseActivity implements
 
 	private void initView() {
 		mLv_contacts = (ListView) findViewById(R.id.lv_contacts);
-		mLl_loading = (LinearLayout) findViewById(R.id.ll_loading);
+		mLl_loading = (LinearLayout) findViewById(R.id.ll_callSmsSafe_loading);
 	}
 
 	private void initData() {

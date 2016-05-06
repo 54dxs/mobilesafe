@@ -84,6 +84,8 @@
         <activity android:name="net.dxs.mobilesafe.activities.setup.Setup3Activity" />
         <activity android:name="net.dxs.mobilesafe.activities.setup.Setup4Activity" />
         <activity android:name="net.dxs.mobilesafe.activities.SelectContactActivity" />
+        <!-- 通讯卫士 -->
+        <activity android:name="net.dxs.mobilesafe.activities.CallSmsSafeActivity" />
 
         <!-- 一键锁屏，远程擦除数据 -->
         <receiver

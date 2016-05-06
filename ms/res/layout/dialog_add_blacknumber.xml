@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <TextView
+        android:id="@+id/tv_addBlackNumber_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#7766ff00"
+        android:gravity="center"
+        android:paddingBottom="10dip"
+        android:paddingTop="10dip"
+        android:text="添加黑名单号码"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/et_addBlackNumber_blacknumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入要加入黑名单的号码"
+        android:inputType="phone"
+        android:maxLength="11" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/cb_addBlackNumber_phone"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="电话拦截"
+            android:textColor="#000000" />
+
+        <CheckBox
+            android:id="@+id/cb_addBlackNumber_sms"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="短信拦截"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btn_addBlackNumber_ok"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_green"
+            android:text="确定" />
+
+        <Button
+            android:id="@+id/btn_addBlackNumber_cancle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_green"
+            android:text="取消" />
+    </LinearLayout>
+
+</LinearLayout>
