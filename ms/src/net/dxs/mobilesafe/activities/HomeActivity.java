@@ -37,7 +37,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 
 	private static final String TAG = "HomeActivity";
 	/** 手机短信内容提供者的Uri */
-	private static final Uri uri_SMS = Uri.parse("content://sms");
+	private static final Uri URI_SMS = Uri.parse("content://sms");
 
 	private static final String[] names = { "手机防盗", "通讯卫士", "软件管理", "进程管理",
 			"流量统计", "手机杀毒", "缓存清理", "高级工具", "设置中心" };
@@ -82,7 +82,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		mGr_functionEntry.setOnItemClickListener(this);
 
 		// 注册一个监听短信的ContentObserver
-		getContentResolver().registerContentObserver(uri_SMS, true,
+		getContentResolver().registerContentObserver(URI_SMS, true,
 				new SmsObserver(this, mHandler));
 		
 		//启动黑名单服务

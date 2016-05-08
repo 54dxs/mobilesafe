@@ -1,19 +1,19 @@
 package net.dxs.mobilesafe.service;
 
 import java.lang.reflect.Method;
-
-import com.android.internal.telephony.ITelephony;
+import java.util.Date;
 
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.db.dao.BlacknumberDao;
 import net.dxs.mobilesafe.utils.L;
+import net.dxs.mobilesafe.utils.txt.PhoneNumberUtils;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,6 +21,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
+import com.android.internal.telephony.ITelephony;
 
 /**
  * 通讯卫士-黑名单的监听服务
@@ -30,19 +32,23 @@ import android.text.TextUtils;
  */
 public class CallSmsSafeService extends Service {
 	private static final String TAG = "CallSmsSafeService";
-	
-	/** 手机短信内容提供者的Uri */
-	private static final Uri uri_SMS = Uri.parse("content://sms");
-	/** 通话记录内容提供者的Uri */
-	private static final Uri uri_CALL_LOG = Uri.parse("content://call_log/calls/");
 
-	/**黑名单数据库操作*/
+	/** 手机短信内容提供者的Uri */
+	private static final Uri URI_SMS = Uri.parse("content://sms");
+	/** 通话记录内容提供者的Uri */
+	private static final Uri URI_CALL_LOG = Uri
+			.parse("content://call_log/calls/");
+
+	/** 黑名单数据库操作 */
 	private BlacknumberDao mDao_blackNumber;
-	/**电话管理器*/
+	/** 电话管理器 */
 	private TelephonyManager mTm;
 
-	/**短信的广播接收者*/
+	/** 短信的广播接收者 */
 	private InnerSmsReceiver mReceiver_innerSms;
+
+	/** 记录时间 */
+	private Date mDate_fistOne;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -57,17 +63,20 @@ public class CallSmsSafeService extends Service {
 		mTm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);// 获得电话管理器
 		mTm.listen(new MyPhoneListener(), PhoneStateListener.LISTEN_CALL_STATE);// 监听来电状态
 
+		// // 黑名单短信拦截
+		// mReceiver_innerSms = new InnerSmsReceiver();
+		// IntentFilter filter = new IntentFilter(
+		// "android.provider.Telephony.SMS_RECEIVED");// 监听短信广播
+		// filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);// 将优先级设置为最高
+		// registerReceiver(mReceiver_innerSms, filter);// 注册广播
+
 		// 黑名单短信拦截
-		mReceiver_innerSms = new InnerSmsReceiver();
-		IntentFilter filter = new IntentFilter(
-				"android.provider.Telephony.SMS_RECEIVED");// 监听短信广播
-		filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);// 将优先级设置为最高
-		registerReceiver(mReceiver_innerSms, filter);// 注册广播
+		SMSObserver();
 	}
 
 	@Override
 	public void onDestroy() {
-		unregisterReceiver(mReceiver_innerSms);//注销广播
+		unregisterReceiver(mReceiver_innerSms);// 注销广播
 		mReceiver_innerSms = null;
 		super.onDestroy();
 	}
@@ -102,24 +111,25 @@ public class CallSmsSafeService extends Service {
 	 */
 	private void callStateRinging(final String incomingNumber) {
 		String mode = mDao_blackNumber.findMode(incomingNumber);
-		if (!TextUtils.isEmpty(mode) && (mode.equals(Constants.SAFE_MODE_ALL)
-				|| mode.equals(Constants.SAFE_MODE_PHONE))) {
+		if (!TextUtils.isEmpty(mode)
+				&& (mode.equals(Constants.SAFE_MODE_ALL) || mode
+						.equals(Constants.SAFE_MODE_PHONE))) {
 			L.i(TAG, incomingNumber + "黑名单电话,挂断电话...");
 			// 挂断电话
 			endCall();
-			Uri uri = Uri.parse("content://call_log/calls/");
 			ContentResolver resolver = getContentResolver();
-			resolver.registerContentObserver(uri, false, new ContentObserver(
-					new Handler()) {
-				@Override
-				public void onChange(boolean selfChange) {
-					super.onChange(selfChange);
-					L.i(TAG, "观察者观察到通话记录数据变化了,删除...");
-					deleteCallLog(incomingNumber);// 删除呼叫记录
-					// 监测到内容发生改变,并执行删除操作后,内容观察者没必要继续观察,删除内容观察者
-					getContentResolver().unregisterContentObserver(this);
-				}
-			});
+			resolver.registerContentObserver(URI_CALL_LOG, false,
+					new ContentObserver(new Handler()) {
+						@Override
+						public void onChange(boolean selfChange) {
+							super.onChange(selfChange);
+							L.i(TAG, "观察者观察到通话记录数据变化了,删除...");
+							deleteCallLog(incomingNumber);// 删除呼叫记录
+							// 监测到内容发生改变,并执行删除操作后,内容观察者没必要继续观察,删除内容观察者
+							getContentResolver()
+									.unregisterContentObserver(this);
+						}
+					});
 		}
 	}
 
@@ -147,8 +157,8 @@ public class CallSmsSafeService extends Service {
 	 */
 	public void deleteCallLog(String incomingNumber) {
 		ContentResolver resolver = getContentResolver();
-		Uri url = Uri.parse("content://call_log/calls/");
-		resolver.delete(url, "number=?", new String[] { incomingNumber });
+		resolver.delete(URI_CALL_LOG, "number=?",
+				new String[] { incomingNumber });
 	}
 
 	/**
@@ -170,8 +180,9 @@ public class CallSmsSafeService extends Service {
 				String body = smsMessage.getMessageBody();// 获得短信内容
 				smsMessage.getTimestampMillis();
 				String mode = mDao_blackNumber.findMode(sendNumber);
-				if (!TextUtils.isEmpty(mode) && (Constants.SAFE_MODE_ALL.equals(mode)
-						|| Constants.SAFE_MODE_SMS.equals(mode))) {
+				if (!TextUtils.isEmpty(mode)
+						&& (Constants.SAFE_MODE_ALL.equals(mode) || Constants.SAFE_MODE_SMS
+								.equals(mode))) {
 					L.i(TAG, sendNumber + "发现黑名单短信,拦截...");
 					abortBroadcast();
 					// 真实开发这里应该把拦截下来的短信存储起来,在通知栏有所提示,并且被拦截下来的短信可以恢复
@@ -184,47 +195,87 @@ public class CallSmsSafeService extends Service {
 			}
 		}
 	}
-	
-//	/**
-//	 * 
-//	 * @param incomingNumber
-//	 */
-//	private void SMSObserver() {
-//		ContentResolver resolver = getContentResolver();
-//		resolver.registerContentObserver(uri_CALL_LOG, false, new ContentObserver(
-//				new Handler()) {
-//			@Override
-//			public void onChange(boolean selfChange) {
-//				super.onChange(selfChange);
-//				L.i(TAG, "观察者观察到短信记录数据变化了,删除...");
-//				deleteCallLog(incomingNumber);// 删除呼叫记录
-//				// 监测到内容发生改变,并执行删除操作后,内容观察者没必要继续观察,删除内容观察者
-//				getContentResolver().unregisterContentObserver(this);
-//			}
-//		});
-		
-		
-		
-//		String mode = mDao_blackNumber.findMode(incomingNumber);
-//		if (!TextUtils.isEmpty(mode)
-//				&& (mode.equals(Constants.SAFE_MODE_ALL) || mode
-//						.equals(Constants.SAFE_MODE_PHONE))) {
-//			L.i(TAG, incomingNumber + "黑名单电话,挂断电话...");
-//			// 挂断电话
-//			endCall();
-//			Uri uri = Uri.parse("content://call_log/calls/");
-//			ContentResolver resolver = getContentResolver();
-//			resolver.registerContentObserver(uri, false, new ContentObserver(
-//					new Handler()) {
-//				@Override
-//				public void onChange(boolean selfChange) {
-//					super.onChange(selfChange);
-//					L.i(TAG, "观察者观察到通话记录数据变化了,删除...");
-//					deleteCallLog(incomingNumber);// 删除呼叫记录
-//					// 监测到内容发生改变,并执行删除操作后,内容观察者没必要继续观察,删除内容观察者
-//					getContentResolver().unregisterContentObserver(this);
-//				}
-//			});
-//		}
-//	}
+
+	/**
+	 * 短信观察者
+	 */
+	private void SMSObserver() {
+		ContentResolver resolver = getContentResolver();
+		resolver.registerContentObserver(URI_SMS, false, new ContentObserver(
+				new Handler()) {
+			@Override
+			public void onChange(boolean selfChange) {
+				super.onChange(selfChange);
+				L.i(TAG, "观察者观察到短信记录数据变化了,删除...");
+				// 每当有一条新短信到来时，我们接收并处理这条短信
+				getSmsLatestOne();
+			}
+		});
+	}
+
+	/**
+	 * 获取最后一条短信
+	 */
+	private void getSmsLatestOne() {
+		Cursor cursor = getContentResolver().query(URI_SMS,
+				new String[] { "address", "date", "type", "body" }, null, null,
+				"_id DESC LIMIT 1");
+		if (cursor == null) {
+			L.i(TAG, "getSmsLatestOne()-游标为空");
+			return;
+		}
+
+		if (cursor.moveToNext()) {
+			String address = cursor.getString(0);// 手机号
+			Date newDate = new Date(cursor.getLong(1));
+			if (newDate.equals(mDate_fistOne)) {
+				// 因为收到一条短信会在数据库中记录两次，所以这里要做一次排重
+				L.i(TAG, "getSmsLatestOne()-时间重复，排重");
+				return;
+			}
+			mDate_fistOne = newDate;
+			int type = cursor.getInt(2);// 短信状态（1：收；0：发）
+			// 只处理收到的一条短信
+			if (type == 1) {
+				String body = cursor.getString(3);
+				handleSMS(PhoneNumberUtils.formatPhoneNumber(address), body,
+						cursor.getLong(1));
+			}
+		}
+	}
+
+	/**
+	 * 处理接收到的短信
+	 * 
+	 * @param phone
+	 * @param body
+	 * @param data
+	 */
+	private void handleSMS(String phone, String body, long data) {
+		L.i(TAG, "handleSMS()-有短信到来了");
+		String mode = mDao_blackNumber.findMode(phone);
+		if (!TextUtils.isEmpty(mode)
+				&& (Constants.SAFE_MODE_ALL.equals(mode) || Constants.SAFE_MODE_SMS
+						.equals(mode))) {
+			L.i(TAG, phone + "发现黑名单短信,拦截...");
+			// 真实开发这里应该把拦截下来的短信存储起来,在通知栏有所提示,并且被拦截下来的短信可以恢复
+			deleteSMS(phone, data);
+		}
+		// 智能拦截
+		if (body.contains("fapiao")) {// 真是开发这里可能要使用到分词技术lucence//黑名单库见金山卫士firewall_sys_rules.db
+			L.i(TAG, phone + "发现发票短信,拦截...");
+		}
+	}
+
+	/**
+	 * 删除短信
+	 * 
+	 * @param phone
+	 * @param data
+	 */
+	private void deleteSMS(String phone, long data) {
+		ContentResolver resolver = getContentResolver();
+		resolver.delete(URI_SMS, "address=? and date=?", new String[] { phone,
+				String.valueOf(data) });
+	}
 }

@@ -30,7 +30,7 @@ public class SmsObserver extends ContentObserver {
 	private static final String TAG = "SmsObserver";
 
 	/** 手机短信内容提供者的Uri */
-	private static final Uri uri_SMS = Uri.parse("content://sms");
+	private static final Uri URI_SMS = Uri.parse("content://sms");
 
 	/** 上下文 */
 	private Context mContext;
@@ -66,7 +66,7 @@ public class SmsObserver extends ContentObserver {
 	 * 获取最后一条短信
 	 */
 	private void getSmsLatestOne() {
-		Cursor cursor = mContext.getContentResolver().query(uri_SMS,
+		Cursor cursor = mContext.getContentResolver().query(URI_SMS,
 				new String[] { "address", "date", "type", "body" }, null, null,
 				"_id DESC LIMIT 1");
 		if (cursor == null) {

@@ -9,7 +9,8 @@ package net.dxs.mobilesafe.utils.txt;
 public class PhoneNumberUtils {
 
 	/**
-	 * 获得一个格式化的手机号
+	 * 获得一个格式化的手机号<br>
+	 * 如：将+8615010990415->15010990415
 	 * 
 	 * @param phone
 	 * @return
