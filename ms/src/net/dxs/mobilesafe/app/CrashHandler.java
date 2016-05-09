@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.TreeSet;
 
 import net.dxs.mobilesafe.utils.L;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -46,7 +47,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	private static final String CRASH_REPORTER_EXTENSION = ".dat";
 
 	/** SD卡错误报告文件路径 */
-	private static String SDCARD_PATH = "/sdcard/data/mobilesafe/log";
+	@SuppressLint("SdCardPath")
+	private static String SDCARD_PATH = "/mnt/sdcard/mobilesafe/log/";
 
 	/** 保证只有一个CrashHandler实例 */
 	private CrashHandler() {
@@ -54,7 +56,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	}
 
 	private void initAddress() {
-		SDCARD_PATH = Environment.getExternalStorageDirectory() + "/";// +"/data/mobilesafe/log";
+		SDCARD_PATH = Environment.getExternalStorageDirectory()
+				+ "/mobilesafe/log/";
+		File file = new File(SDCARD_PATH);
+		// 如果目录不存在则创建之
+		if (!file.exists() && !file.isDirectory()) {
+			file.mkdirs();
+		}
 		L.e(TAG, "SDCARD_PATH>>" + SDCARD_PATH);
 	}
 
@@ -120,10 +128,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 				L.e("error", msg);
 
-				//				Toast toast = Toast.makeText(mContext, "程序出错，即将退出:\r\n" + msg,
-				//						Toast.LENGTH_LONG);
-				//				toast.setGravity(Gravity.CENTER, 0, 0);
-				//				toast.show();
+				// Toast toast = Toast.makeText(mContext, "程序出错，即将退出:\r\n" +
+				// msg,
+				// Toast.LENGTH_LONG);
+				// toast.setGravity(Gravity.CENTER, 0, 0);
+				// toast.show();
 
 				// MsgPrompt.showMsg(mContext, "程序出错啦", msg+"\n点确认退出");
 				Looper.loop();
@@ -208,9 +217,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 			Time t = new Time("GMT+8");
 			t.setToNow(); // 取得系统时间
-			int date = t.year * 10000 + t.month * 100 + t.monthDay;
+			int date = t.year * 10000 + (t.month + 1) * 100 + t.monthDay;
 			int time = t.hour * 10000 + t.minute * 100 + t.second;
-			String fileName = "crash-" + date + "-" + time + CRASH_REPORTER_EXTENSION;
+			String fileName = "crash-" + date + "-" + time
+					+ CRASH_REPORTER_EXTENSION;
 			saveConfig(mContext, fileName, mDeviceCrashInfo);
 			// FileOutputStream trace = mContext.openFileOutput(fileName,
 			// Context.MODE_PRIVATE);
@@ -232,15 +242,18 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	 * @param properties
 	 * @throws Exception
 	 */
-	private void saveConfig(Context context, String file, Properties properties) throws Exception {
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+	private void saveConfig(Context context, String file, Properties properties)
+			throws Exception {
+		if (Environment.getExternalStorageState().equals(
+				Environment.MEDIA_MOUNTED)) {
 			file = SDCARD_PATH + file;
 			FileOutputStream trace = new FileOutputStream(file, false);
 			properties.store(trace, "");
 			trace.flush();
 			trace.close();
 		} else {
-			FileOutputStream trace = context.openFileOutput(file, Context.MODE_PRIVATE);
+			FileOutputStream trace = context.openFileOutput(file,
+					Context.MODE_PRIVATE);
 			properties.store(trace, "");
 			trace.flush();
 			trace.close();
@@ -255,9 +268,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	public void collectCrashDeviceInfo(Context ctx) {
 		try {
 			PackageManager pm = ctx.getPackageManager();
-			PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(), PackageManager.GET_ACTIVITIES);
+			PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(),
+					PackageManager.GET_ACTIVITIES);
 			if (pi != null) {
-				mDeviceCrashInfo.put(VERSION_NAME, pi.versionName == null ? "not set" : pi.versionName);
+				mDeviceCrashInfo.put(VERSION_NAME,
+						pi.versionName == null ? "not set" : pi.versionName);
 				mDeviceCrashInfo.put(VERSION_CODE, "" + pi.versionCode);
 			}
 		} catch (NameNotFoundException e) {

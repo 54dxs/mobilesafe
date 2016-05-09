@@ -58,6 +58,7 @@ public class CallSmsSafeService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		L.i(TAG, "通讯卫士-黑名单的监听服务-启动");
 		mDao_blackNumber = new BlacknumberDao(this);
 		// 黑名单电话拦截
 		mTm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);// 获得电话管理器
@@ -76,9 +77,10 @@ public class CallSmsSafeService extends Service {
 
 	@Override
 	public void onDestroy() {
-		unregisterReceiver(mReceiver_innerSms);// 注销广播
-		mReceiver_innerSms = null;
+//		unregisterReceiver(mReceiver_innerSms);// 注销广播
+//		mReceiver_innerSms = null;
 		super.onDestroy();
+		L.i(TAG, "通讯卫士-黑名单的监听服务-关闭");
 	}
 
 	/**

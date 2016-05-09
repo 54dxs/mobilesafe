@@ -139,7 +139,7 @@ public class SmsObserver extends ContentObserver {
 				L.i(TAG, "远程锁屏");
 			}
 		} else {
-			L.i(TAG, "手机防盗状态是未开启，解析特殊的短信指定");
+			L.i(TAG, "手机防盗状态是未开启");
 		}
 	}
 

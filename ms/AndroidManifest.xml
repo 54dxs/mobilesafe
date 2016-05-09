@@ -86,6 +86,8 @@
         <activity android:name="net.dxs.mobilesafe.activities.SelectContactActivity" />
         <!-- 通讯卫士 -->
         <activity android:name="net.dxs.mobilesafe.activities.CallSmsSafeActivity" />
+        <!-- 设置中心 -->
+        <activity android:name="net.dxs.mobilesafe.activities.SettinCenterActivity" />
 
         <!-- 电话短信黑名单的服务 -->
         <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService"/>

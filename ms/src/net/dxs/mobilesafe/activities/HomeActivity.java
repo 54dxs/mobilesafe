@@ -7,7 +7,6 @@ import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.domain.FunctionEntry;
 import net.dxs.mobilesafe.observer.SmsObserver;
-import net.dxs.mobilesafe.service.CallSmsSafeService;
 import net.dxs.mobilesafe.ui.adapter.HomeAdapter;
 import net.dxs.mobilesafe.utils.L;
 import net.dxs.mobilesafe.utils.Md5Utils;
@@ -84,24 +83,18 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 		// 注册一个监听短信的ContentObserver
 		getContentResolver().registerContentObserver(URI_SMS, true,
 				new SmsObserver(this, mHandler));
-		
-		//启动黑名单服务
-		Intent callSmsSafeIntent = new Intent(this, CallSmsSafeService.class);
-		startService(callSmsSafeIntent);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Intent intent;
 		switch (position) {
 		case 0:// 手机防盗
 			checkPwd();
 			break;
 
 		case 1:// 通讯卫士
-			intent = new Intent(HomeActivity.this, CallSmsSafeActivity.class);
-			startActivity(intent);
+			toActivity(CallSmsSafeActivity.class);
 			break;
 
 		case 2:// 软件管理
@@ -123,8 +116,20 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			break;
 
 		case 8:// 设置中心
+			toActivity(SettinCenterActivity.class);
 			break;
 		}
+	}
+
+	/**
+	 * 进入到指定页面
+	 * 
+	 * @param clazz
+	 */
+	private void toActivity(Class<?> clazz) {
+		Intent intent;
+		intent = new Intent(HomeActivity.this, clazz);
+		startActivity(intent);
 	}
 
 	/**

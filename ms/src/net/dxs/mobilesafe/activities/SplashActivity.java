@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.app.App;
 import net.dxs.mobilesafe.utils.L;
@@ -103,7 +104,7 @@ public class SplashActivity extends BaseActivity {
 	 */
 	private void createShortCut() {
 		//判断是否已经创建了快捷图标
-		boolean shortcut = SpUtil.getInstance().getBoolean("shortcut", false);
+		boolean shortcut = SpUtil.getInstance().getBoolean(Constants.SHORTCUT, false);
 		if(shortcut){
 			return;
 		}
@@ -124,7 +125,7 @@ public class SplashActivity extends BaseActivity {
 		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, i);//3，设置快捷方式的意图
 		//发送一个创建快捷方式的广播
 		sendBroadcast(intent);
-		SpUtil.getInstance().saveBoolean("shortcut", true);
+		SpUtil.getInstance().saveBoolean(Constants.SHORTCUT, true);
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class SplashActivity extends BaseActivity {
 	 */
 	private void autoUpdate() {
 		//判断是否开启了自动更新检查
-		boolean isAutoUpdate = SpUtil.getInstance().getBoolean("autoupdate", false);
+		boolean isAutoUpdate = SpUtil.getInstance().getBoolean(Constants.AUTO_UPDATE, false);
 		if (isAutoUpdate) {
 			//连接服务器检查更新信息
 			chackVersion();

@@ -10,7 +10,7 @@ package net.dxs.mobilesafe;
 public interface Constants {
 
 	/** SharedPreferences 文件名 **/
-	String SHARED_PREFERENCE_NAME = "client_preferences";
+	String SHARED_PREFERENCE_NAME = "mobilesafe_client_preferences";
 
 	/********************************** 用户登陆管理 ***************************************************************************************************/
 
@@ -47,6 +47,12 @@ public interface Constants {
 	/** JS 回调映射名 **/
 	String PPL_WEBVIEW_JS_CALLBACK = "PPLWebViewJSCallback";
 
+	/********************************** 欢迎界面 ***************************************************************************************************/
+	/** 软件自动更新标记 **/
+	String AUTO_UPDATE = "auto_update";
+	/** 创建桌面快捷图标 **/
+	String SHORTCUT = "shortcut";
+
 	/********************************** 手机防盗 ***************************************************************************************************/
 	/** 进入手机防盗的密钥 **/
 	String LOSTFIND_PSSWORD = "LostFind_pssword";
@@ -58,7 +64,7 @@ public interface Constants {
 	String LOSTFIND_PROTECTING_STATUS = "LostFind_protecting_status";
 	/** 手机防盗-设置向导2-sim **/
 	String LOSTFIND_SIM = "LostFind_SIM";
-	
+
 	/********************************** 通讯卫士 ***************************************************************************************************/
 	/** 拦截模式-全部拦截 **/
 	String SAFE_MODE_ALL = "0";
@@ -66,5 +72,5 @@ public interface Constants {
 	String SAFE_MODE_PHONE = "1";
 	/** 拦截模式-短信拦截 **/
 	String SAFE_MODE_SMS = "2";
-	
+
 }
