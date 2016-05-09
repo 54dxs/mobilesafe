@@ -90,7 +90,8 @@ public class SettinCenterActivity extends BaseActivity implements
 		// 动态的检查黑名单拦截服务的状态
 //		boolean callSmsSafe = ServiceStatusUtils.isServiceRunning(this,
 //				"net.dxs.mobilesafe.service.CallSmsSafeService");
-		boolean callSmsSafe = ServiceStatusUtils.isServiceRunning(CallSmsSafeService.class);
+		boolean callSmsSafe = ServiceStatusUtils
+				.isServiceRunning(CallSmsSafeService.class);
 		mSv_callsms_safe.setChecked(callSmsSafe);
 
 		// //动态的检查程序锁服务的状态
