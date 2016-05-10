@@ -3,6 +3,7 @@ package net.dxs.mobilesafe.activities;
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.service.CallSmsSafeService;
+import net.dxs.mobilesafe.service.WatchDogService;
 import net.dxs.mobilesafe.ui.view.SettingView;
 import net.dxs.mobilesafe.utils.ServiceStatusUtils;
 import net.dxs.mobilesafe.utils.SpUtil;
@@ -33,6 +34,7 @@ public class SettinCenterActivity extends BaseActivity implements
 
 	// 声明程序锁控件
 	private SettingView mSv_app_lock;
+	private SettingView mSv_applock;
 	private Intent watchDogIntent;
 
 	@Override
@@ -67,7 +69,7 @@ public class SettinCenterActivity extends BaseActivity implements
 		callSmsSafeIntent = new Intent(this, CallSmsSafeService.class);
 
 		// 程序锁初始化
-		// watchDogIntent = new Intent(this, WatchDogService.class);
+		watchDogIntent = new Intent(this, WatchDogService.class);
 	}
 
 	/**
@@ -88,16 +90,14 @@ public class SettinCenterActivity extends BaseActivity implements
 		// sv_show_address.setChecked(showaddress);
 
 		// 动态的检查黑名单拦截服务的状态
-//		boolean callSmsSafe = ServiceStatusUtils.isServiceRunning(this,
-//				"net.dxs.mobilesafe.service.CallSmsSafeService");
 		boolean callSmsSafe = ServiceStatusUtils
 				.isServiceRunning(CallSmsSafeService.class);
 		mSv_callsms_safe.setChecked(callSmsSafe);
 
-		// //动态的检查程序锁服务的状态
-		// boolean applock = ServiceStatusUtils.isServiceRunning(this,
-		// "net.dxs.mobilesafe.service.WatchDogService");
-		// sv_applock.setChecked(applock);
+		// 动态的检查程序锁服务的状态
+		boolean applock = ServiceStatusUtils
+				.isServiceRunning(WatchDogService.class);
+		mSv_applock.setChecked(applock);
 	}
 
 	@Override

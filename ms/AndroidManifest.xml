@@ -90,9 +90,13 @@
         <activity android:name="net.dxs.mobilesafe.activities.SettinCenterActivity" />
         <!-- 软件管理 -->
         <activity android:name="net.dxs.mobilesafe.activities.AppManagerActivity" />
+        <!-- 软件管理-密码输入 -->
+        <activity android:name="net.dxs.mobilesafe.activities.EnterPwdActivity" />
 
         <!-- 电话短信黑名单的服务 -->
         <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService"/>
+        <!-- 软件看门狗的服务 -->
+        <service android:name="net.dxs.mobilesafe.service.WatchDogService"/>
         
         <!-- 一键锁屏，远程擦除数据 -->
         <receiver
