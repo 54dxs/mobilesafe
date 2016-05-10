@@ -2,19 +2,16 @@ package net.dxs.mobilesafe.ui.adapter;
 
 import java.util.List;
 
-import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.db.dao.ApplockDao;
 import net.dxs.mobilesafe.domain.AppInfo;
-import net.dxs.mobilesafe.domain.BlackNumber;
-import net.dxs.mobilesafe.ui.adapter.BlackNumberAdapter.IDeleteListener;
-import net.dxs.mobilesafe.ui.adapter.BlackNumberAdapter.ViewHolder;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -83,13 +80,13 @@ public class AppManagerAdapter extends BaseAdapter {
 
 		ViewHolder viewHolder = null;
 		// 1.使用历史缓存的view对象 减少 布局创建的次数
-		if (convertView == null) {
+		if (convertView != null && convertView instanceof RelativeLayout) {// 注意这里对TextView的过滤
+			viewHolder = (ViewHolder) convertView.getTag();// 从口袋里面取出记事本
+		} else {
 			convertView = View.inflate(mContext, R.layout.item_appinfo, null);
 			// 2.减少子孩子查询的次数，只是在创建子孩子的时候 获取孩子对象的引用
 			viewHolder = getViewHolder(convertView);
 			convertView.setTag(viewHolder);// 把记事本放在父亲的口袋里
-		} else {
-			viewHolder = (ViewHolder) convertView.getTag();// 从口袋里面取出记事本
 		}
 		// 寻找子孩子的引用比较消耗资源
 		setData(viewHolder, info, position);
@@ -130,16 +127,16 @@ public class AppManagerAdapter extends BaseAdapter {
 	 * @author lijian-pc
 	 * @date 2016-5-9 下午5:53:06
 	 */
-	static class ViewHolder {
+	public static class ViewHolder {
 		/** app图标 */
-		ImageView iv_appIcon;
+		public ImageView iv_appIcon;
 		/** app名称 */
-		TextView tv_appName;
+		public TextView tv_appName;
 		/** 是否为系统程序 */
-		TextView tv_inRom;
+		public TextView tv_inRom;
 		/** 版本 */
-		TextView tv_version;
+		public TextView tv_version;
 		/** 是否开启程序锁 */
-		ImageView iv_status;
+		public ImageView iv_status;
 	}
 }

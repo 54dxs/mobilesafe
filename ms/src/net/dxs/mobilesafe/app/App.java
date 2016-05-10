@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.DisplayMetrics;
 
 /**
  * 全局变量
@@ -75,5 +76,49 @@ public class App extends Application {
 			//can't reach	不可能发生的异常
 			return 0;
 		}
+	}
+
+	/**
+	 * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+	 * 
+	 * @param dpValue
+	 * @return
+	 */
+	public static float dip2px(float dpValue) {
+		final float scale = App.getContext().getResources().getDisplayMetrics().density;
+		return (dpValue * scale + 0.5f);
+	}
+
+	/**
+	 * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+	 * 
+	 * @param pxValue
+	 * @return
+	 */
+	public static float px2dip(float pxValue) {
+		final float scale = App.getContext().getResources().getDisplayMetrics().density;
+		return (pxValue / scale + 0.5f);
+	}
+
+	/**
+	 * 获取屏幕的宽度
+	 * 
+	 * @return
+	 */
+	public static int getWidth() {
+		DisplayMetrics dm = App.getContext().getApplicationContext()
+				.getResources().getDisplayMetrics();
+		return dm.widthPixels;
+	}
+
+	/**
+	 * 获取屏幕的高度
+	 * 
+	 * @return
+	 */
+	public static int getHeight() {
+		DisplayMetrics dm = App.getContext().getApplicationContext()
+				.getResources().getDisplayMetrics();
+		return dm.heightPixels;
 	}
 }
