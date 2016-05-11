@@ -1,5 +1,6 @@
 package net.dxs.mobilesafe.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import net.dxs.mobilesafe.Constants;
@@ -7,6 +8,7 @@ import net.dxs.mobilesafe.activities.EnterPwdActivity;
 import net.dxs.mobilesafe.db.dao.ApplockDao;
 import net.dxs.mobilesafe.utils.L;
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -15,12 +17,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 
 /**
- * 开门狗服务
+ * 看门狗服务
  * 
  * @author lijian-pc
  * @date 2016-5-10 下午1:42:50
@@ -102,8 +105,8 @@ public class WatchDogService extends Service {
 			public void run() {
 				flag = true;
 				while (flag) {
-					RunningTaskInfo taskInfo = am.getRunningTasks(1).get(0);
-					String packname = taskInfo.topActivity.getPackageName();
+					String packname = getRunningTaskPackageName();
+					L.i(TAG, "packname:" + packname);
 					// 判断当前应用程序的包名是否需要保护。
 					// 查询数据库操作 1.打开数据库 2查询遍历 3返回结果
 					// if (dao.find(packname)) {//消耗几十毫秒的时间 把查询数据库的逻辑换成查询内存
@@ -119,12 +122,59 @@ public class WatchDogService extends Service {
 							startActivity(intent);
 						}
 					}
-					SystemClock.sleep(30);
+					SystemClock.sleep(3000);
 				}
-			};
+			}
 		}.start();
 
 		super.onCreate();
+	}
+
+	private String getRunningTaskPackageName() {
+		String packname;
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			packname = getCurrentPkgName(this);
+		} else {
+			//Android5.0之后不起作用
+			RunningTaskInfo taskInfo = am.getRunningTasks(1).get(0);
+			packname = taskInfo.topActivity.getPackageName();
+		}
+		return packname;
+	}
+
+	private String getCurrentPkgName(Context context) {
+		ActivityManager.RunningAppProcessInfo currentInfo = null;
+		Field field = null;
+		int START_TASK_TO_FRONT = 2;
+		String pkgName = null;
+		try {
+			field = ActivityManager.RunningAppProcessInfo.class
+					.getDeclaredField("processState");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ActivityManager am = (ActivityManager) context
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		//小米Note（型号：MI NOTE PRO）（Android版本 5.1.1）方法获取不到数据，继续寻找解决方案中
+		List<RunningAppProcessInfo> appList = am.getRunningAppProcesses();
+		for (ActivityManager.RunningAppProcessInfo app : appList) {
+			if (app.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+				Integer state = null;
+				try {
+					state = field.getInt(app);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (state != null && state == START_TASK_TO_FRONT) {
+					currentInfo = app;
+					break;
+				}
+			}
+		}
+		if (currentInfo != null) {
+			pkgName = currentInfo.processName;
+		}
+		return pkgName;
 	}
 
 	@Override

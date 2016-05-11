@@ -30,12 +30,11 @@ public class SettinCenterActivity extends BaseActivity implements
 
 	// 声明黑名单拦截的控件
 	private SettingView mSv_callsms_safe;
-	private Intent callSmsSafeIntent;
+	private Intent mIntent_callSmsSafe;
 
 	// 声明程序锁控件
 	private SettingView mSv_app_lock;
-	private SettingView mSv_applock;
-	private Intent watchDogIntent;
+	private Intent mIntent_watchDog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +65,9 @@ public class SettinCenterActivity extends BaseActivity implements
 		// showAddressIntent = new Intent(this, CallAddressService.class);
 
 		// 黑名单拦截的初始化操作
-		callSmsSafeIntent = new Intent(this, CallSmsSafeService.class);
-
+		mIntent_callSmsSafe = new Intent(this, CallSmsSafeService.class);
 		// 程序锁初始化
-		watchDogIntent = new Intent(this, WatchDogService.class);
+		mIntent_watchDog = new Intent(this, WatchDogService.class);
 	}
 
 	/**
@@ -97,7 +95,7 @@ public class SettinCenterActivity extends BaseActivity implements
 		// 动态的检查程序锁服务的状态
 		boolean applock = ServiceStatusUtils
 				.isServiceRunning(WatchDogService.class);
-		mSv_applock.setChecked(applock);
+		mSv_app_lock.setChecked(applock);
 	}
 
 	@Override
@@ -124,19 +122,19 @@ public class SettinCenterActivity extends BaseActivity implements
 		case R.id.sv_callsms_safe:// 黑名单拦截设置
 			if (mSv_callsms_safe.isChecked()) {
 				mSv_callsms_safe.setChecked(false);
-				stopService(callSmsSafeIntent);
+				stopService(mIntent_callSmsSafe);
 			} else {
 				mSv_callsms_safe.setChecked(true);
-				startService(callSmsSafeIntent);
+				startService(mIntent_callSmsSafe);
 			}
 			break;
 		case R.id.sv_app_lock:// 程序锁设置
 			if (mSv_app_lock.isChecked()) {
 				mSv_app_lock.setChecked(false);
-				stopService(watchDogIntent);
+				stopService(mIntent_watchDog);
 			} else {
 				mSv_app_lock.setChecked(true);
-				startService(watchDogIntent);
+				startService(mIntent_watchDog);
 			}
 			break;
 		}
