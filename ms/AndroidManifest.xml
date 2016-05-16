@@ -92,12 +92,14 @@
         <activity android:name="net.dxs.mobilesafe.activities.AppManagerActivity" />
         <!-- 软件管理-密码输入 -->
         <activity android:name="net.dxs.mobilesafe.activities.EnterPwdActivity" />
+        <!-- 进程管理 -->
+        <activity android:name="net.dxs.mobilesafe.activities.TaskManagerActivity" />
 
         <!-- 电话短信黑名单的服务 -->
-        <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService"/>
+        <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService" />
         <!-- 软件看门狗的服务 -->
-        <service android:name="net.dxs.mobilesafe.service.WatchDogService"/>
-        
+        <service android:name="net.dxs.mobilesafe.service.WatchDogService" />
+
         <!-- 一键锁屏，远程擦除数据 -->
         <receiver
             android:name="net.dxs.mobilesafe.receiver.MyDeviceAdminReceiver"
@@ -124,11 +126,11 @@
             </intent-filter>
         </receiver>
         <!-- 短信的广播接收者 -->
-<!--         <receiver android:name="net.dxs.mobilesafe.receiver.SmsReceiver" > -->
-<!--             <intent-filter android:priority="2147483647" > -->
-<!--                 <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
-<!--             </intent-filter> -->
-<!--         </receiver> -->
+        <!-- <receiver android:name="net.dxs.mobilesafe.receiver.SmsReceiver" > -->
+        <!-- <intent-filter android:priority="2147483647" > -->
+        <!-- <action android:name="android.provider.Telephony.SMS_RECEIVED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
     </application>
 
 </manifest>

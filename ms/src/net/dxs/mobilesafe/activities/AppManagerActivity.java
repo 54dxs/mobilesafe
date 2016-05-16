@@ -171,6 +171,7 @@ public class AppManagerActivity extends BaseActivity implements
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	private String getAvailSD() {
 		File path = Environment.getExternalStorageDirectory(); // 获取了sd卡的目录
 		StatFs stat = new StatFs(path.getPath());// 获得当前linux文件系统的状态

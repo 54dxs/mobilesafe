@@ -102,6 +102,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			break;
 
 		case 3:// 进程管理
+			toActivity(TaskManagerActivity.class);
 			break;
 
 		case 4:// 流量统计
