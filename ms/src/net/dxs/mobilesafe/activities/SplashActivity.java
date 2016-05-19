@@ -1,6 +1,7 @@
 package net.dxs.mobilesafe.activities;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -10,6 +11,7 @@ import java.net.URL;
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
 import net.dxs.mobilesafe.app.App;
+import net.dxs.mobilesafe.service.CallAddressService;
 import net.dxs.mobilesafe.utils.L;
 import net.dxs.mobilesafe.utils.SpUtil;
 import net.dxs.mobilesafe.utils.StreamUtil;
@@ -84,46 +86,78 @@ public class SplashActivity extends BaseActivity {
 	private void initData() {
 		getSharedPreferences("config", Context.MODE_PRIVATE);
 		mTv_version.setText("版本号:" + App.getVersionName());
-		//播放一个动画效果
+		// 播放一个动画效果
 		playAnimation();
 		autoUpdate();
 
 		// 在应用程序打开的splash界面里面 完成 数据库文件的初始化。
-		//		copyDB("address.db");
-		//		copyDB("antivirus.db");
+		copyDB("address.db");
+		copyDB("antivirus.db");
 
-		//		//启动来电归属地服务 
-		//		Intent intent = new Intent(this, CallAddressService.class);
-		//		startService(intent);
+		// 启动来电归属地服务
+		Intent intent = new Intent(this, CallAddressService.class);
+		startService(intent);
 
 		createShortCut();
+	}
+
+	/**
+	 * 初始化数据库
+	 * 
+	 * @param dbname
+	 *            数据库文件的名字
+	 */
+	private void copyDB(String dbname) {
+		try {
+			File file = new File(getFilesDir(), dbname);
+			if (file.exists() && file.length() > 0) {
+				L.i(TAG, "数据库已经存在无需拷贝");
+			} else {
+				L.i(TAG, "拷贝数据库" + dbname);
+				InputStream is = getAssets().open(dbname);
+
+				FileOutputStream fos = new FileOutputStream(file);
+				int len = 0;
+				byte[] buffer = new byte[1024];
+				while ((len = is.read(buffer)) != -1) {
+					fos.write(buffer, 0, len);
+				}
+				fos.close();
+				is.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * 创建一个桌面快捷图标
 	 */
 	private void createShortCut() {
-		//判断是否已经创建了快捷图标
-		boolean shortcut = SpUtil.getInstance().getBoolean(Constants.SHORTCUT, false);
-		if(shortcut){
+		// 判断是否已经创建了快捷图标
+		boolean shortcut = SpUtil.getInstance().getBoolean(Constants.SHORTCUT,
+				false);
+		if (shortcut) {
 			return;
 		}
-		
-		//在桌面launcher应用创建一个快捷图标,即给其发送一个广播
-		Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-		
-		//1,告诉桌面创建的快捷图标的名称
+
+		// 在桌面launcher应用创建一个快捷图标,即给其发送一个广播
+		Intent intent = new Intent(
+				"com.android.launcher.action.INSTALL_SHORTCUT");
+
+		// 1,告诉桌面创建的快捷图标的名称
 		intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "手机卫士");
-		//2,设置快捷图标的图标
-		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.location_show_logo);
+		// 2,设置快捷图标的图标
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.location_show_logo);
 		intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, bitmap);
-		
-		//3,指定快捷方式的动作
+
+		// 3,指定快捷方式的动作
 		Intent i = new Intent();
-		i.setAction("net.dxs.mobilesafe.home");//这里只能用隐式意图
+		i.setAction("net.dxs.mobilesafe.home");// 这里只能用隐式意图
 		i.addCategory("android.intent.category.DEFAULT");
-		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, i);//3，设置快捷方式的意图
-		//发送一个创建快捷方式的广播
+		intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, i);// 3，设置快捷方式的意图
+		// 发送一个创建快捷方式的广播
 		sendBroadcast(intent);
 		SpUtil.getInstance().saveBoolean(Constants.SHORTCUT, true);
 	}
@@ -132,12 +166,13 @@ public class SplashActivity extends BaseActivity {
 	 * 软件更新
 	 */
 	private void autoUpdate() {
-		//判断是否开启了自动更新检查
-		boolean isAutoUpdate = SpUtil.getInstance().getBoolean(Constants.AUTO_UPDATE, false);
+		// 判断是否开启了自动更新检查
+		boolean isAutoUpdate = SpUtil.getInstance().getBoolean(
+				Constants.AUTO_UPDATE, false);
 		if (isAutoUpdate) {
-			//连接服务器检查更新信息
+			// 连接服务器检查更新信息
 			chackVersion();
-		} else {//自动更新是关闭的
+		} else {// 自动更新是关闭的
 			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -157,23 +192,27 @@ public class SplashActivity extends BaseActivity {
 				long startTime = System.currentTimeMillis();
 				Message msg = mHandler.obtainMessage();
 				try {
-					String serviceUrl = getResources().getString(R.string.serviceUrl);
-					URL url = new URL(serviceUrl);//http: https:// ftp:// svn://
-					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setRequestMethod("GET");//设置请求方式，区分大小写
-					conn.setConnectTimeout(5000);//设置连接超时时间
-					//conn.setReadTimeout(5000);//读取超时时间
-					int code = conn.getResponseCode();//获取服务器状态码
+					String serviceUrl = getResources().getString(
+							R.string.serviceUrl);
+					URL url = new URL(serviceUrl);// http: https:// ftp://
+													// svn://
+					HttpURLConnection conn = (HttpURLConnection) url
+							.openConnection();
+					conn.setRequestMethod("GET");// 设置请求方式，区分大小写
+					conn.setConnectTimeout(5000);// 设置连接超时时间
+					// conn.setReadTimeout(5000);//读取超时时间
+					int code = conn.getResponseCode();// 获取服务器状态码
 
-					if (code == 200) {//请求成功
-						InputStream is = conn.getInputStream();//json字符串
+					if (code == 200) {// 请求成功
+						InputStream is = conn.getInputStream();// json字符串
 						String result = StreamUtil.readStream(is);
 						JSONObject jsonObj = new JSONObject(result);
 						String version = jsonObj.getString("version");
 						description = jsonObj.getString("description");
 						path = jsonObj.getString("path");
-						L.i(TAG, "version: " + version + ",\ndescription: " + description + ",\npath: " + path);
-						//判断 服务器的版本号和客户端的版本号是否一致
+						L.i(TAG, "version: " + version + ",\ndescription: "
+								+ description + ",\npath: " + path);
+						// 判断 服务器的版本号和客户端的版本号是否一致
 						if (App.getVersionName().equals(version)) {
 							L.i(TAG, "版本号相同,进入主界面");
 							SystemClock.sleep(2000);
@@ -183,20 +222,20 @@ public class SplashActivity extends BaseActivity {
 							msg.what = HANDLER_SHOW_UPDATE_DIALOG;
 						}
 					} else {
-						//状态码不正确
+						// 状态码不正确
 						msg.what = HANDLER_SERVER_CODE_ERROR;
 					}
 
-				} catch (MalformedURLException e) {//路径错误(协议错误了)
+				} catch (MalformedURLException e) {// 路径错误(协议错误了)
 					e.printStackTrace();
 					msg.what = HANDLER_URL_MALFORMED;
-				} catch (NotFoundException e) {//域名或者路径找不到
+				} catch (NotFoundException e) {// 域名或者路径找不到
 					e.printStackTrace();
 					msg.what = HANDLER_URL_ERROR;
-				} catch (IOException e) {//访问网络错误
+				} catch (IOException e) {// 访问网络错误
 					e.printStackTrace();
 					msg.what = HANDLER_NETWORK_ERROR;
-				} catch (JSONException e) {//解析json文件出错了
+				} catch (JSONException e) {// 解析json文件出错了
 					e.printStackTrace();
 					msg.what = HANDLER_JSON_ERROR;
 				} finally {
@@ -216,7 +255,8 @@ public class SplashActivity extends BaseActivity {
 		super.parserMessage(msg);
 		switch (msg.what) {
 		case HANDLER_SERVER_CODE_ERROR:
-			AppToast.getInstance().show("获取更新信息失败,错误码:" + HANDLER_SERVER_CODE_ERROR);
+			AppToast.getInstance().show(
+					"获取更新信息失败,错误码:" + HANDLER_SERVER_CODE_ERROR);
 			loadMainUI();
 			break;
 		case HANDLER_SHOW_UPDATE_DIALOG:
@@ -235,7 +275,8 @@ public class SplashActivity extends BaseActivity {
 			loadMainUI();
 			break;
 		case HANDLER_JSON_ERROR:
-			AppToast.getInstance().show("JSON解析错误,错误码:" + HANDLER_SERVER_CODE_ERROR);
+			AppToast.getInstance().show(
+					"JSON解析错误,错误码:" + HANDLER_SERVER_CODE_ERROR);
 			loadMainUI();
 			break;
 
@@ -265,11 +306,14 @@ public class SplashActivity extends BaseActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				L.i(TAG, "dialog:" + dialog + ";which:" + which);
-				//下载apk，替换安装
+				// 下载apk，替换安装
 				FinalHttp fh = new FinalHttp();
-				//调用download方法开始下载
+				// 调用download方法开始下载
 
-				String targetPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + path.substring(path.lastIndexOf("/") + 1);
+				String targetPath = Environment.getExternalStorageDirectory()
+						.getAbsolutePath()
+						+ "/"
+						+ path.substring(path.lastIndexOf("/") + 1);
 				fh.download(path, targetPath, false, new AjaxCallBack<File>() {
 
 					private ProgressDialog pd;
@@ -295,28 +339,33 @@ public class SplashActivity extends BaseActivity {
 						}
 
 						AppToast.getInstance().show("下载成功,开始替换安装");
-						//						<activity android:name=".PackageInstallerActivity"
-						//				        	android:configChanges="orientation|keyboardHidden"
-						//				        	android:theme="@style/TallTitleBarTheme">
-						//						    <intent-filter>
-						//						        <action android:name="android.intent.action.VIEW" />
-						//						        <category android:name="android.intent.category.DEFAULT" />
-						//						        <data android:scheme="content" />
-						//						        <data android:scheme="file" />
-						//						        <data android:mimeType="application/vnd.android.package-archive" />
-						//						    </intent-filter>
-						//						</activity>
+						// <activity android:name=".PackageInstallerActivity"
+						// android:configChanges="orientation|keyboardHidden"
+						// android:theme="@style/TallTitleBarTheme">
+						// <intent-filter>
+						// <action android:name="android.intent.action.VIEW" />
+						// <category
+						// android:name="android.intent.category.DEFAULT" />
+						// <data android:scheme="content" />
+						// <data android:scheme="file" />
+						// <data
+						// android:mimeType="application/vnd.android.package-archive"
+						// />
+						// </intent-filter>
+						// </activity>
 						Intent intent = new Intent();
 						intent.setAction("android.intent.action.VIEW");
 						intent.addCategory("android.intent.category.DEFAULT");
-						//	intent.setData(Uri.fromFile(t));
-						//	intent.setType("application/vnd.android.package-archive");
-						intent.setDataAndType(Uri.fromFile(t), "application/vnd.android.package-archive");//上面两行的合并,因为上面两行单独设置会报错
+						// intent.setData(Uri.fromFile(t));
+						// intent.setType("application/vnd.android.package-archive");
+						intent.setDataAndType(Uri.fromFile(t),
+								"application/vnd.android.package-archive");// 上面两行的合并,因为上面两行单独设置会报错
 						startActivity(intent);
 					}
 
 					@Override
-					public void onFailure(Throwable t, int errorNo, String strMsg) {
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
 						super.onFailure(t, errorNo, strMsg);
 						AppToast.getInstance().show("下载失败");
 						loadMainUI();
@@ -333,7 +382,7 @@ public class SplashActivity extends BaseActivity {
 			}
 		});
 
-		builder.setCancelable(false);//流氓做法
+		builder.setCancelable(false);// 流氓做法
 		builder.show();
 	}
 
@@ -343,7 +392,7 @@ public class SplashActivity extends BaseActivity {
 	protected void loadMainUI() {
 		Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
-		finish();//将自身关闭
+		finish();// 将自身关闭
 	}
 
 	/**
@@ -351,7 +400,7 @@ public class SplashActivity extends BaseActivity {
 	 */
 	private void playAnimation() {
 		Animation animation = new AlphaAnimation(0.5f, 1.0f);
-		animation.setDuration(2000);//动画播放时间
+		animation.setDuration(2000);// 动画播放时间
 		mRl_root.startAnimation(animation);
 	}
 }

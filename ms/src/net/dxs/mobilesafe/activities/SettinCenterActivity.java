@@ -2,6 +2,7 @@ package net.dxs.mobilesafe.activities;
 
 import net.dxs.mobilesafe.Constants;
 import net.dxs.mobilesafe.R;
+import net.dxs.mobilesafe.service.CallAddressService;
 import net.dxs.mobilesafe.service.CallSmsSafeService;
 import net.dxs.mobilesafe.service.WatchDogService;
 import net.dxs.mobilesafe.ui.view.SettingView;
@@ -23,7 +24,7 @@ public class SettinCenterActivity extends BaseActivity implements
 
 	// 声明归属地显示的控件
 	private SettingView mSv_show_address;
-	private Intent showAddressIntent;
+	private Intent mIntent_showAddress;
 
 	// 声明软件自动更新的控件
 	private SettingView mSv_auto_update;
@@ -62,8 +63,7 @@ public class SettinCenterActivity extends BaseActivity implements
 		mSv_app_lock.setOnClickListener(this);
 
 		// 归属地显示的初始化操作
-		// showAddressIntent = new Intent(this, CallAddressService.class);
-
+		mIntent_showAddress = new Intent(this, CallAddressService.class);
 		// 黑名单拦截的初始化操作
 		mIntent_callSmsSafe = new Intent(this, CallSmsSafeService.class);
 		// 程序锁初始化
@@ -82,10 +82,10 @@ public class SettinCenterActivity extends BaseActivity implements
 				Constants.AUTO_UPDATE, false);
 		mSv_auto_update.setChecked(autoupdate);
 
-		// //动态的检查服务的状态
-		// boolean showaddress = ServiceStatusUtils.isServiceRunning(this,
-		// "net.dxs.mobilesafe.service.CallAddressService");
-		// sv_show_address.setChecked(showaddress);
+		// 动态的检查服务的状态
+		boolean showaddress = ServiceStatusUtils.isServiceRunning(this,
+				"net.dxs.mobilesafe.service.CallAddressService");
+		mSv_show_address.setChecked(showaddress);
 
 		// 动态的检查黑名单拦截服务的状态
 		boolean callSmsSafe = ServiceStatusUtils
@@ -113,10 +113,10 @@ public class SettinCenterActivity extends BaseActivity implements
 		case R.id.sv_show_address:// 归属地显示设置
 			if (mSv_show_address.isChecked()) {
 				mSv_show_address.setChecked(false);
-				stopService(showAddressIntent);
+				stopService(mIntent_showAddress);
 			} else {
 				mSv_show_address.setChecked(true);
-				startService(showAddressIntent);
+				startService(mIntent_showAddress);
 			}
 			break;
 		case R.id.sv_callsms_safe:// 黑名单拦截设置

@@ -99,6 +99,8 @@
         <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService" />
         <!-- 软件看门狗的服务 -->
         <service android:name="net.dxs.mobilesafe.service.WatchDogService" />
+        <!-- 呼叫归属地显示的服务 -->
+        <service android:name="net.dxs.mobilesafe.service.CallAddressService" />
 
         <!-- 一键锁屏，远程擦除数据 -->
         <receiver
