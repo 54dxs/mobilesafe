@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/btn_special_default"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/popup_window"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:text="ni hao "
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/title_divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/title"
+            android:background="@drawable/atools" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_divider"
+            android:gravity="center"
+            android:padding="50dip"
+            android:text="你好啊"
+            android:textColor="@color/color_062443"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:paddingBottom="20dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" >
+
+            <Button
+                android:id="@+id/negativeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/app"
+                android:focusable="true"
+                android:padding="10dip"
+                android:text="点击"
+                android:textColor="@color/color_22292c"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/positiveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_green_normal"
+                android:focusable="true"
+                android:padding="20dip"
+                android:text="ni hao a "
+                android:textColor="@color/color_3cac17"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

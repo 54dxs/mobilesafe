@@ -62,6 +62,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		// 如果目录不存在则创建之
 		if (!file.exists() && !file.isDirectory()) {
 			file.mkdirs();
+			L.i(TAG, "Create SDCARD_PATH--->" + SDCARD_PATH);
 		}
 		L.e(TAG, "SDCARD_PATH>>" + SDCARD_PATH);
 	}

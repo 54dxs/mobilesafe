@@ -67,6 +67,7 @@ public class CallAddressService extends Service {
 			String address = AddressDao.find(number);
 			if (!TextUtils.isEmpty(address)) {
 				// Toast.makeText(getApplicationContext(), address, 1).show();
+				L.i(TAG, "启动归属地显示窗体");
 				showMyToast(address);
 			}
 		}
