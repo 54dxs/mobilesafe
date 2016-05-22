@@ -219,6 +219,9 @@ public class TaskManagerActivity extends BaseActivity implements
 	 * 选择全部条目
 	 */
 	private void selectAll() {
+		if (userTaskInfos == null || systemTaskInfos == null) {
+			return;
+		}
 		for (TaskInfo info : userTaskInfos) {
 			if (info.getPackname().equals(getPackageName())) {// 条目的包名和当前应用程序包名一致了。
 				continue;
@@ -235,6 +238,9 @@ public class TaskManagerActivity extends BaseActivity implements
 	 * 取消选择全部条目
 	 */
 	private void unSelectAll() {
+		if (userTaskInfos == null || systemTaskInfos == null) {
+			return;
+		}
 		for (TaskInfo info : userTaskInfos) {
 			info.setChecked(false);
 		}
@@ -248,6 +254,9 @@ public class TaskManagerActivity extends BaseActivity implements
 	 * 杀死全部选中的进程
 	 */
 	private void killAll() {
+		if (userTaskInfos == null || systemTaskInfos == null) {
+			return;
+		}
 		long savedMem = 0;// 释放的内存空间
 		int count = 0;// 杀死的进程数量
 		ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
