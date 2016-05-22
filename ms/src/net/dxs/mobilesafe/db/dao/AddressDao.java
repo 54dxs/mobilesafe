@@ -39,6 +39,8 @@ public class AddressDao {
 							new String[] { number.substring(0, 7) });
 			if (cursor.moveToNext()) {
 				location = cursor.getString(0);
+			}else{
+				location = "手机号未收录";
 			}
 			cursor.close();
 		} else {// 其他号码 110 119 999

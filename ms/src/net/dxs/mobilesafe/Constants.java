@@ -77,4 +77,10 @@ public interface Constants {
 	/** 拦截模式-短信拦截 **/
 	String SAFE_MODE_SMS = "2";
 
+	/********************************** 归属地 ***************************************************************************************************/
+	/** 归属地显示窗体-x坐标 **/
+	String CALLADDRESS_WINDOWMANAGER_PARAMS_X = "CallAddress_windowManager_params_x";
+	/** 归属地显示窗体-y坐标 **/
+	String CALLADDRESS_WINDOWMANAGER_PARAMS_Y = "CallAddress_windowManager_params_y";
+
 }
