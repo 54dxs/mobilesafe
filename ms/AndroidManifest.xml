@@ -94,6 +94,8 @@
         <activity android:name="net.dxs.mobilesafe.activities.EnterPwdActivity" />
         <!-- 进程管理 -->
         <activity android:name="net.dxs.mobilesafe.activities.TaskManagerActivity" />
+        <!-- 缓存清理 -->
+        <activity android:name="net.dxs.mobilesafe.activities.CleanCacheActivity" />
 
         <!-- 电话短信黑名单的服务 -->
         <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService" />

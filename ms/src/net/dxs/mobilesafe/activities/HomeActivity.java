@@ -112,6 +112,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			break;
 
 		case 6:// 缓存清理
+			toActivity(CleanCacheActivity.class);
 			break;
 
 		case 7:// 高级工具
