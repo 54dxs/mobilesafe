@@ -94,6 +94,8 @@
         <activity android:name="net.dxs.mobilesafe.activities.EnterPwdActivity" />
         <!-- 进程管理 -->
         <activity android:name="net.dxs.mobilesafe.activities.TaskManagerActivity" />
+        <!-- 手机杀毒 -->
+        <activity android:name="net.dxs.mobilesafe.activities.AntiVirusActivity" />
         <!-- 缓存清理 -->
         <activity android:name="net.dxs.mobilesafe.activities.CleanCacheActivity" />
 

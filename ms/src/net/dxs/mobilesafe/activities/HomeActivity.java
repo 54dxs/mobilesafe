@@ -109,6 +109,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			break;
 
 		case 5:// 手机杀毒
+			toActivity(AntiVirusActivity.class);
 			break;
 
 		case 6:// 缓存清理
