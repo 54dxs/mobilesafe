@@ -117,6 +117,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
 			break;
 
 		case 7:// 高级工具
+			toActivity(AtoolsActivity.class);
 			break;
 
 		case 8:// 设置中心

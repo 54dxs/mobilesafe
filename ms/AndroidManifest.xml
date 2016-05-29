@@ -98,6 +98,10 @@
         <activity android:name="net.dxs.mobilesafe.activities.AntiVirusActivity" />
         <!-- 缓存清理 -->
         <activity android:name="net.dxs.mobilesafe.activities.CleanCacheActivity" />
+        <!-- 高级工具 -->
+        <activity android:name="net.dxs.mobilesafe.activities.AtoolsActivity" />
+        <!-- 号码归属地查询 -->
+        <activity android:name="net.dxs.mobilesafe.activities.NumberQueryActivity" />
 
         <!-- 电话短信黑名单的服务 -->
         <service android:name="net.dxs.mobilesafe.service.CallSmsSafeService" />
