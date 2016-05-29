@@ -1,6 +1,10 @@
 package net.dxs.mobilesafe.activities;
 
 import net.dxs.mobilesafe.R;
+import net.dxs.mobilesafe.engine.SmsTools;
+import net.dxs.mobilesafe.engine.SmsTools.BackupSmsCallback;
+import net.dxs.mobilesafe.utils.AppUtil.AppToast;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +22,7 @@ public class AtoolsActivity extends BaseActivity implements OnClickListener {
 	private Button mBtn_numberAddressQuery;
 	private Button mBtn_smsBackUp;
 	private Button mBtn_smsRestore;
+	private ProgressDialog mPd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +75,93 @@ public class AtoolsActivity extends BaseActivity implements OnClickListener {
 	 * 短息备份
 	 */
 	private void smsBackUp() {
-		// TODO Auto-generated method stub
+		mPd = new ProgressDialog(this);
+		mPd.setTitle("正在备份...");
+		mPd.setCancelable(false);
+		mPd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		mPd.show();
 
+		new Thread() {
+			public void run() {
+				try {
+					SmsTools.backupSms(AtoolsActivity.this,
+							new BackupSmsCallback() {
+
+								@Override
+								public void onSmsBackup(int progress) {
+									mPd.setProgress(progress);
+								}
+
+								@Override
+								public void beforeSmsBackup(int max) {
+									mPd.setMax(max);
+								}
+							});
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							AppToast.getInstance().show("恭喜你,短信备份成功");
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							AppToast.getInstance().show("短信备份失败");
+						}
+					});
+				} finally {
+					mPd.dismiss();
+				}
+			};
+		}.start();
 	}
 
 	/**
 	 * 短信还原
 	 */
 	private void smsRestore() {
-		// TODO Auto-generated method stub
+		mPd = new ProgressDialog(this);
+		mPd.setTitle("正在还原...");
+		mPd.setCancelable(false);
+		mPd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		mPd.show();
 
+		new Thread() {
+			public void run() {
+				try {
+					SmsTools.RestoreSms(AtoolsActivity.this,
+							new BackupSmsCallback() {
+
+								@Override
+								public void onSmsBackup(int progress) {
+									mPd.setProgress(progress);
+								}
+
+								@Override
+								public void beforeSmsBackup(int max) {
+									mPd.setMax(max);
+								}
+							});
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							AppToast.getInstance().show("恭喜你,短信还原成功");
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							AppToast.getInstance().show("短信还原失败");
+						}
+					});
+				} finally {
+					mPd.dismiss();
+				}
+			};
+		}.start();
 	}
 }
